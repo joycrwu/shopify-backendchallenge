@@ -58,6 +58,16 @@ def delete_item(item_id):
     db.session.commit()
     return success_response(item.serialize(), 200)
 
+@app.route("/api/items/<int:item_id>/", methods=["POST"])
+def update_item(item_id):
+    item = Item.query.filter_by(id=item_id).first()
+    if item is None:
+        return failure_response("Item not found!")
+    body = json.loads(request.data)
+    item.name = body.get("name")
+    db.session.commit()
+    return success_response(item.serialize(), 201)
+
 @app.route("/api/items/<int:item_id>/warehouse/", methods=["POST"])
 def create_warehouse(item_id):
     item = Item.query.filter_by(id=item_id).first()
